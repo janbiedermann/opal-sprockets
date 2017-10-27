@@ -5,6 +5,8 @@ require 'opal/builder'
 require 'opal/sprockets/path_reader'
 require 'opal/sprockets/source_map_server'
 
+require 'benchmark'
+
 $OPAL_SOURCE_MAPS = {}
 
 module Opal
@@ -41,10 +43,14 @@ module Opal
       #      If .$to_s() is not implemented and some other lib is loaded before
       #      corelib/* .toString results in an `undefined is not a function` error.
       compiler_options.merge!(requirable: false) if logical_path == 'opal'
-
+      compiler = nil
+      result = ''
+      puts "ospc: f: #{filename}, l: #{logical_path}, o: #{compiler_options} "
+      t = Benchmark.measure do
       compiler = Compiler.new(data, compiler_options)
       result = compiler.compile
-
+      end
+      puts "tc: #{t}"
       process_requires(compiler.requires, context)
       process_required_trees(compiler.required_trees, context)
 
