@@ -46,6 +46,7 @@ module Opal
       compiler_options.merge!(requirable: false) if logical_path == 'opal'
       compiler = nil
       result = ''
+      t = nil
       puts "ospc: f: #{filename}, l: #{logical_path}, o: #{compiler_options} "
       if logical_path == 'parser/lexer'
         StackProf.run(mode: :cpu, raw: true, out: 'tmp/stack_lexer.dump') do
