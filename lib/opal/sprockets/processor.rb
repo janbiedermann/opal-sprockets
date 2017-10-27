@@ -6,6 +6,7 @@ require 'opal/sprockets/path_reader'
 require 'opal/sprockets/source_map_server'
 
 require 'benchmark'
+require 'stackprof'
 
 $OPAL_SOURCE_MAPS = {}
 
@@ -46,10 +47,16 @@ module Opal
       compiler = nil
       result = ''
       puts "ospc: f: #{filename}, l: #{logical_path}, o: #{compiler_options} "
-      t = Benchmark.measure do
-        src = File.read(filename)
-      compiler = Compiler.new(src, compiler_options)
-      result = compiler.compile
+      if logical_path == 'parser/lexer'
+        StackProf.run(mode: :cpu, raw: true, out: 'tmp/stack_lexer.dump') do
+          compiler = Compiler.new(data, compiler_options)
+          result = compiler.compile
+        end
+      else
+        t = Benchmark.measure do
+          compiler = Compiler.new(data, compiler_options)
+          result = compiler.compile
+        end
       end
       puts "tc: #{t}"
       process_requires(compiler.requires, context)
