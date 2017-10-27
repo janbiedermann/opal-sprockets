@@ -48,8 +48,8 @@ module Opal
       result = ''
       t = nil
       puts "ospc: f: #{filename}, l: #{logical_path}, o: #{compiler_options} "
-      if logical_path == 'parser/lexer'
-        StackProf.run(mode: :cpu, raw: true, out: 'tmp/stack_lexer.dump') do
+      if logical_path == 'corelib/kernel'
+        StackProf.run(mode: :cpu, raw: true, out: 'tmp/stack_kernel.dump', interval: 10) do
           t = Benchmark.measure do
             compiler = Compiler.new(data, compiler_options)
             result = compiler.compile
