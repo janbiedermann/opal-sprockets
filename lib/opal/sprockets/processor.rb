@@ -47,7 +47,8 @@ module Opal
       result = ''
       puts "ospc: f: #{filename}, l: #{logical_path}, o: #{compiler_options} "
       t = Benchmark.measure do
-      compiler = Compiler.new(data, compiler_options)
+        src = File.read(filename)
+      compiler = Compiler.new(src, compiler_options)
       result = compiler.compile
       end
       puts "tc: #{t}"
